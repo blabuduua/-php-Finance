@@ -18,6 +18,7 @@ class CreateExpensesTable extends Migration
             $table->string('title');
             $table->integer('sum');
             $table->integer('employee_id');
+            $table->date('purchase_at');
             $table->timestamps();
         });
     }

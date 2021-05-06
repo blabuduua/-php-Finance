@@ -11,7 +11,7 @@ use App\Models\Employee;
 class EmployeeController extends Controller
 {
     /**
-     * Расчёт заработной платы сотрудника за выбранный месяц
+     * Рассчёт заработной платы сотрудника за выбранный месяц
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -35,20 +35,20 @@ class EmployeeController extends Controller
         $employee = new Employee;
 
         // Считаем 3% от всех заказов клиентов этого сотрудника, за выбранный месяц
-        $total = $employee->month_orders($request->id, $date, $total);
+        $total = $employee->monthOrders($request->id, $date, $total);
 
         // Узнаём, является ли этот сотрудник лучшим за выбранный месяц и назначаем бонус $200
-        $total = $employee->month_employees($request->id, $date, $total);
+        $total = $employee->monthEmployees($request->id, $date, $total);
 
         // Узнаём, есть ли у сторудника больше 30 постоянных клиентов, которые совершили более 2-х покупок и назначаем квартальный бонус $300
-        $total = $employee->regular_clients($request->id, $date, $total);
+        $total = $employee->regularClients($request->id, $date, $total);
 
 
         return response()->json( ['employeePayment' => $total] );
     }
 
     /**
-     * Расчёт дохода компании за выбранный период. 
+     * Рассчёт дохода компании за выбранный период. 
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -70,10 +70,39 @@ class EmployeeController extends Controller
         $employee = new Employee;
 
         // Считаем доход компании за выбранный период
-        $total = $employee->between_month_orders($from_date, $to_date);
+        $total = $employee->betweenMonthOrders($from_date, $to_date);
 
 
         return response()->json( ['companyIncome' => $total] );
+    }
+
+    /**
+     * Рассчёт расходов компании за выбранный период. 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function companyConsumption(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'from_date' => 'required|date',
+            'to_date' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json( ['errors' => $validator->errors()->all()] );
+        }
+
+        $from_date = Carbon::createFromFormat('Y-m-d', $request->from_date, 'Europe/Kiev')->startOfMonth();
+        $to_date = Carbon::createFromFormat('Y-m-d', $request->to_date, 'Europe/Kiev')->endOfMonth(); 
+
+        $employee = new Employee;
+
+        // Считаем расход компании за выбранный период
+        $total = $employee->betweenMonthConsumption($from_date, $to_date);
+
+
+        return response()->json( ['companyConsumption' => $total] );
     }
 
     /**

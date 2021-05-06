@@ -29,7 +29,7 @@ class Employee extends Model
     }
 
     // Рассчёт 3% от всех заказов клиентов этого сотрудника, за выбранный месяц
-    public function month_orders($employee_id, $date, $total)
+    public function monthOrders($employee_id, $date, $total)
     {
         $month_orders = static::with([
             'expenses',
@@ -53,7 +53,7 @@ class Employee extends Model
     }
 
     // Узнаём, является ли этот сотрудник лучшим за выбранный месяц и назначаем бонус $200
-    public function month_employees($employee_id, $date, $total)
+    public function monthEmployees($employee_id, $date, $total)
     {
         $month_employees = static::with([
             'expenses',
@@ -94,7 +94,7 @@ class Employee extends Model
     }
 
     // Узнаём, есть ли у сторудника больше 30 постоянных клиентов, которые совершили более 2-х покупок и назначаем квартальный бонус $300
-    public function regular_clients($employee_id, $date, $total)
+    public function regularClients($employee_id, $date, $total)
     {
         $regular_clients = static::with([
             'expenses',
@@ -116,8 +116,8 @@ class Employee extends Model
         return $total;
     }
 
-    // Считаем доход компании за выбранный период
-    public function between_month_orders($from_date, $to_date)
+    // Рассчёт доходов компании за выбранный период
+    public function betweenMonthOrders($from_date, $to_date)
     {
         // Итоговая сумма доходов
         $total = 0;
@@ -137,6 +137,32 @@ class Employee extends Model
                     // Считаем сумму всех продаж по этому сотруднику
                     $total = $total + $client->orders->sum('sum');
                 }
+            }
+        }
+
+
+        return $total;
+    }
+
+    // Рассчёт расходов компании за выбранный период
+    public function betweenMonthConsumption($from_date, $to_date)
+    {
+        // Итоговая сумма расходов
+        $total = 0;
+
+        $between_month_сonsumption = static::with([
+            'expenses' => function ($query) use ($from_date, $to_date) {
+                $query->whereBetween('purchase_at', [$from_date, $to_date]);
+            }
+        ])->whereHas('expenses', function ($query) use ($from_date, $to_date) {
+            return $query->whereBetween('purchase_at', [$from_date, $to_date]);
+        })->get();
+        
+
+        if(!$between_month_сonsumption->isEmpty()){
+            foreach ($between_month_сonsumption as $employee) {
+                // Считаем сумму всех расходов по этому сотруднику
+                $total = $total + $employee->expenses->sum('sum');
             }
         }
 

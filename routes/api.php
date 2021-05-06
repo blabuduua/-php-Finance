@@ -19,3 +19,5 @@ use App\Http\Controllers\EmployeeController;
 Route::post( 'employeePayment', [EmployeeController::class, 'employeePayment'] )->name('employeePayment');
 
 Route::post( 'companyIncome', [EmployeeController::class, 'companyIncome'] )->name('companyIncome');
+
+Route::post( 'companyConsumption', [EmployeeController::class, 'companyConsumption'] )->name('companyConsumption');
