@@ -116,6 +116,34 @@ class Employee extends Model
         return $total;
     }
 
+    // Считаем доход компании за выбранный период
+    public function between_month_orders($from_date, $to_date)
+    {
+        // Итоговая сумма доходов
+        $total = 0;
+
+        $between_month_orders = static::with([
+            'clients.orders' => function ($query) use ($from_date, $to_date) {
+                $query->whereBetween('purchase_at', [$from_date, $to_date]);
+            }
+        ])->whereHas('clients.orders', function ($query) use ($from_date, $to_date) {
+            return $query->whereBetween('purchase_at', [$from_date, $to_date]);
+        })->get();
+
+
+        if(!$between_month_orders->isEmpty()){
+            foreach ($between_month_orders as $employee) {
+                foreach ($employee->clients as $client) {
+                    // Считаем сумму всех продаж по этому сотруднику
+                    $total = $total + $client->orders->sum('sum');
+                }
+            }
+        }
+
+
+        return $total;
+    }
+
  	public function storeData($input)
     {
     	return static::create($input);
