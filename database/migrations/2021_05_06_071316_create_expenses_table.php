@@ -17,7 +17,7 @@ class CreateExpensesTable extends Migration
             $table->id();
             $table->string('title');
             $table->integer('sum');
-            $table->integer('user_id');
+            $table->integer('employee_id');
             $table->timestamps();
         });
     }
