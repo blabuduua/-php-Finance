@@ -39,13 +39,13 @@ class ExpenseController extends Controller
 
         $expense->storeData( $request->all() );
 
-        return response()->json( ['success'=>'Расход успешно добавлен'] );
+        return response()->json( ['success' => 'Расход успешно добавлен'] );
     }
 
     /**
      * R - Показать Расход
      *
-     * @param  int  $id
+     * @param  \App\Models\Expense int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -75,7 +75,7 @@ class ExpenseController extends Controller
         $expense = new Expense;
         $expense->updateData( $id, $request->all() );
 
-        return response()->json( ['success'=>'Расход успешно обновлён'] );
+        return response()->json( ['success' => 'Расход успешно обновлён'] );
     }
 
     /**
@@ -89,6 +89,6 @@ class ExpenseController extends Controller
         $expense = new Expense;
         $expense->deleteData($id);
 
-        return response()->json( ['success'=>'Расход успешно удалён'] );
+        return response()->json( ['success' => 'Расход успешно удалён'] );
     }
 }

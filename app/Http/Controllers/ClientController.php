@@ -38,13 +38,13 @@ class ClientController extends Controller
 
         $client->storeData( $request->all() );
 
-        return response()->json( ['success'=>'Клиент успешно добавлен'] );
+        return response()->json( ['success' => 'Клиент успешно добавлен'] );
     }
 
     /**
      * R - Показать Клиента
      *
-     * @param  int  $id
+     * @param  \App\Models\Client int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -73,7 +73,7 @@ class ClientController extends Controller
         $client = new Client;
         $client->updateData( $id, $request->all() );
 
-        return response()->json( ['success'=>'Клиент успешно обновлён'] );
+        return response()->json( ['success' => 'Клиент успешно обновлён'] );
     }
 
     /**
@@ -87,6 +87,6 @@ class ClientController extends Controller
         $сlient = new Client;
         $сlient->deleteData($id);
 
-        return response()->json( ['success'=>'Клиент успешно удалён'] );
+        return response()->json( ['success' => 'Клиент успешно удалён'] );
     }
 }

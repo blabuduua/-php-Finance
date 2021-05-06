@@ -4,10 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Carbon\Carbon;
+
 use App\Models\Employee;
 
 class EmployeeController extends Controller
 {
+    /**
+     * Расчёт заработной платы сотрудника за выбранный месяц
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function employeePayment(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'id' => 'required|integer',
+            'date' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json( ['errors' => $validator->errors()->all()] );
+        }
+
+        $date = Carbon::createFromFormat('Y-m-d', $request->date, 'Europe/Kiev'); 
+
+        // Фиксированная ставка $500
+        $total = 500;
+
+        $employee = new Employee;
+
+        // Считаем 3% от всех заказов клиентов этого сотрудника, за выбранный месяц
+        $total = $employee->month_orders($request->id, $date, $total);
+
+        // Узнаём, является ли этот сотрудник лучшим за выбранный месяц и назначаем бонус $200
+        $total = $employee->month_employees($request->id, $date, $total);
+
+        // Узнаём, есть ли у сторудника больше 30 постоянных клиентов, которые совершили более 2-х покупок и назначаем квартальный бонус $300
+        $total = $employee->regular_clients($request->id, $date, $total);
+
+
+        return response()->json( ['employeePayment' => $total] );
+    }
+
     /**
      * Список всех Сотрудников
      *
@@ -37,13 +76,13 @@ class EmployeeController extends Controller
 
         $employee->storeData( $request->all() );
 
-        return response()->json( ['success'=>'Сотрудник успешно добавлен'] );
+        return response()->json( ['success' => 'Сотрудник успешно добавлен'] );
     }
 
     /**
      * R - Показать Сотрудника
      *
-     * @param  int  $id
+     * @param  \App\Models\Employee int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -71,7 +110,7 @@ class EmployeeController extends Controller
         $employee = new Employee;
         $employee->updateData( $id, $request->all() );
 
-        return response()->json( ['success'=>'Сотрудник успешно обновлён'] );
+        return response()->json( ['success' => 'Сотрудник успешно обновлён'] );
     }
 
     /**
@@ -85,6 +124,6 @@ class EmployeeController extends Controller
         $employee = new Employee;
         $employee->deleteData($id);
 
-        return response()->json( ['success'=>'Сотрудник успешно удалён'] );
+        return response()->json( ['success' => 'Сотрудник успешно удалён'] );
     }
 }

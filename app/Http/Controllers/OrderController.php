@@ -39,13 +39,13 @@ class OrderController extends Controller
 
         $order->storeData( $request->all() );
 
-        return response()->json( ['success'=>'Заказ успешно добавлен'] );
+        return response()->json( ['success' => 'Заказ успешно добавлен'] );
     }
 
     /**
      * R - Показать Заказ
      *
-     * @param  int  $id
+     * @param  \App\Models\Order int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -75,7 +75,7 @@ class OrderController extends Controller
         $order = new Order;
         $order->updateData( $id, $request->all() );
 
-        return response()->json( ['success'=>'Заказ успешно обновлён'] );
+        return response()->json( ['success' => 'Заказ успешно обновлён'] );
     }
 
     /**
@@ -89,6 +89,6 @@ class OrderController extends Controller
 		$order = new Order;
         $order->deleteData($id);
 
-        return response()->json( ['success'=>'Заказ успешно удалён'] );
+        return response()->json( ['success' => 'Заказ успешно удалён'] );
     }
 }
