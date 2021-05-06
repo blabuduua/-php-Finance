@@ -157,7 +157,7 @@ class Employee extends Model
         ])->whereHas('expenses', function ($query) use ($from_date, $to_date) {
             return $query->whereBetween('purchase_at', [$from_date, $to_date]);
         })->get();
-        
+
 
         if(!$between_month_сonsumption->isEmpty()){
             foreach ($between_month_сonsumption as $employee) {
@@ -168,6 +168,13 @@ class Employee extends Model
 
 
         return $total;
+    }
+
+    // Рассчёт прибыли компании за выбранный период
+    public function betweenMonthProfit($from_date, $to_date)
+    {
+        // Итоговая сумма прибыли. Доход минус Расход
+        return $this->betweenMonthOrders($from_date, $to_date) - $this->betweenMonthConsumption($from_date, $to_date);
     }
 
  	public function storeData($input)

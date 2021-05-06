@@ -48,7 +48,7 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Рассчёт дохода компании за выбранный период. 
+     * Рассчёт доходов компании за выбранный период. 
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -69,7 +69,7 @@ class EmployeeController extends Controller
 
         $employee = new Employee;
 
-        // Считаем доход компании за выбранный период
+        // Рассчёт доходов компании за выбранный период
         $total = $employee->betweenMonthOrders($from_date, $to_date);
 
 
@@ -98,11 +98,40 @@ class EmployeeController extends Controller
 
         $employee = new Employee;
 
-        // Считаем расход компании за выбранный период
+        // Рассчёт расходов компании за выбранный период
         $total = $employee->betweenMonthConsumption($from_date, $to_date);
 
 
         return response()->json( ['companyConsumption' => $total] );
+    }
+
+    /**
+     * Рассчёт прибыли компании за выбранный период. 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function companyProfit(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'from_date' => 'required|date',
+            'to_date' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json( ['errors' => $validator->errors()->all()] );
+        }
+
+        $from_date = Carbon::createFromFormat('Y-m-d', $request->from_date, 'Europe/Kiev')->startOfMonth();
+        $to_date = Carbon::createFromFormat('Y-m-d', $request->to_date, 'Europe/Kiev')->endOfMonth(); 
+
+        $employee = new Employee;
+
+        // Рассчёт прибыли компании за выбранный период
+        $total = $employee->betweenMonthProfit($from_date, $to_date);
+
+
+        return response()->json( ['companyProfit' => $total] );
     }
 
     /**
