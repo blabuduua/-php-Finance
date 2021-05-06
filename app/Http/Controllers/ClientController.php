@@ -22,11 +22,23 @@ class ClientController extends Controller
      * C - Создать Клиента
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Client $client)
     {
-        //
+        $validator = \Validator::make($request->all(), [
+            'fio' => 'required|string|max:255',
+            'employee_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json( ['errors' => $validator->errors()->all()] );
+        }
+
+        $client->storeData( $request->all() );
+
+        return response()->json( ['success'=>'Клиент успешно добавлен'] );
     }
 
     /**

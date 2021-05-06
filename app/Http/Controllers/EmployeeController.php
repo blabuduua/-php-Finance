@@ -22,11 +22,22 @@ class EmployeeController extends Controller
      * C - Создать Сотрудника
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Employee $employee)
     {
-        //
+        $validator = \Validator::make($request->all(), [
+            'fio' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json( ['errors' => $validator->errors()->all()] );
+        }
+
+        $employee->storeData( $request->all() );
+
+        return response()->json( ['success'=>'Сотрудник успешно добавлен'] );
     }
 
     /**

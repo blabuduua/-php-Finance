@@ -22,11 +22,24 @@ class OrderController extends Controller
      * C - Создать Заказ
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Order $order)
     {
-        //
+        $validator = \Validator::make($request->all(), [
+            'sum' => 'required|integer',
+            'employee_id' => 'required|integer',
+            'purchase_at' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json( ['errors' => $validator->errors()->all()] );
+        }
+
+        $order->storeData( $request->all() );
+
+        return response()->json( ['success'=>'Заказ успешно добавлен'] );
     }
 
     /**

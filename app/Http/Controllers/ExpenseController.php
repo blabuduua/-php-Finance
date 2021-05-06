@@ -22,11 +22,24 @@ class ExpenseController extends Controller
      * C - Создать Расход
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Expense  $expense
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Expense $expense)
     {
-        //
+        $validator = \Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'sum' => 'required|integer',
+            'employee_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json( ['errors' => $validator->errors()->all()] );
+        }
+
+        $expense->storeData( $request->all() );
+
+        return response()->json( ['success'=>'Расход успешно добавлен'] );
     }
 
     /**
