@@ -12,6 +12,14 @@ class Client extends Model
     protected $table = 'clients';
     protected $guarded = array();
 
+    /**
+    * Get the orders for the client.
+    */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
  	public function storeData($input)
     {
     	return static::create($input);

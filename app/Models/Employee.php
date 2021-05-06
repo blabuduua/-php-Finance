@@ -12,6 +12,22 @@ class Employee extends Model
     protected $table = 'employees';
     protected $guarded = array();
 
+    /**
+    * Get the expenses for the employee.
+    */
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
+    /**
+    * Get the clients for the employee.
+    */
+    public function clients()
+    {
+        return $this->hasMany(Client::class);
+    }
+
  	public function storeData($input)
     {
     	return static::create($input);
