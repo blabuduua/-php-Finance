@@ -50,7 +50,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json( Order::find($id) );
     }
 
     /**

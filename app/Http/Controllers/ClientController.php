@@ -49,7 +49,7 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json( Client::find($id) );
     }
 
     /**

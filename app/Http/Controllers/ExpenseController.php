@@ -50,7 +50,7 @@ class ExpenseController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json( Expense::find($id) );
     }
 
     /**
