@@ -19,11 +19,23 @@ class Expense extends Model
 
     public function updateData($id, $input)
     {
-        return static::find($id)->update($input);
+        $data = static::find($id);
+
+        if($data !== null){
+            return $data->update($input);
+        }
+        
+        return false;
     }
 
     public function deleteData($id)
-    {
-        return static::find($id)->delete();
+    {   
+        $data = static::find($id);
+
+        if($data !== null){
+            return $data->delete();
+        }
+        
+        return false;
     }
 }

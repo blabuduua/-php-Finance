@@ -32,19 +32,23 @@ class EmployeeController extends Controller
         // Фиксированная ставка $500
         $total = 500;
 
-        $employee = new Employee;
+        $employee = Employee::find($request->id);
 
-        // Считаем 3% от всех заказов клиентов этого сотрудника, за выбранный месяц
-        $total = $employee->monthOrders($request->id, $date, $total);
+        if($employee !== null){
+            // Считаем 3% от всех заказов клиентов этого сотрудника, за выбранный месяц
+            $total = $employee->monthOrders($request->id, $date, $total);
 
-        // Узнаём, является ли этот сотрудник лучшим за выбранный месяц и назначаем бонус $200
-        $total = $employee->monthEmployees($request->id, $date, $total);
+            // Узнаём, является ли этот сотрудник лучшим за выбранный месяц и назначаем бонус $200
+            $total = $employee->monthEmployees($request->id, $date, $total);
 
-        // Узнаём, есть ли у сторудника больше 30 постоянных клиентов, которые совершили более 2-х покупок и назначаем квартальный бонус $300
-        $total = $employee->regularClients($request->id, $date, $total);
+            // Узнаём, есть ли у сторудника больше 30 постоянных клиентов, которые совершили более 2-х покупок и назначаем квартальный бонус $300
+            $total = $employee->regularClients($request->id, $date, $total);
 
 
-        return response()->json( ['employeePayment' => $total] );
+            return response()->json( ['employeePayment' => $total] );
+        }else{
+            return response()->json( ['error' => 'Сотрудник не найден'] );
+        }
     }
 
     /**
@@ -148,10 +152,9 @@ class EmployeeController extends Controller
      * C - Создать Сотрудника
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Employee $employee)
+    public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
             'fio' => 'required|string|max:255',
@@ -161,6 +164,7 @@ class EmployeeController extends Controller
             return response()->json( ['errors' => $validator->errors()->all()] );
         }
 
+        $employee = new Employee;
         $employee->storeData( $request->all() );
 
         return response()->json( ['success' => 'Сотрудник успешно добавлен'] );
@@ -195,9 +199,15 @@ class EmployeeController extends Controller
         }
 
         $employee = new Employee;
-        $employee->updateData( $id, $request->all() );
+        $response = $employee->updateData( $id, $request->all() );
 
-        return response()->json( ['success' => 'Сотрудник успешно обновлён'] );
+        if($response){
+            $answer = ['success' => 'Сотрудник успешно обновлён'];
+        }else{
+            $answer = ['error' => 'Сотрудник не найден'];
+        }
+
+        return response()->json( $answer );
     }
 
     /**
@@ -209,8 +219,14 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
         $employee = new Employee;
-        $employee->deleteData($id);
+        $response = $employee->deleteData($id);
 
-        return response()->json( ['success' => 'Сотрудник успешно удалён'] );
+        if($response){
+            $answer = ['success' => 'Сотрудник успешно удалён'];
+        }else{
+            $answer = ['error' => 'Сотрудник не найден'];
+        }
+
+        return response()->json( $answer );
     }
 }

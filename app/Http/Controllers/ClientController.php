@@ -71,9 +71,15 @@ class ClientController extends Controller
         }
 
         $client = new Client;
-        $client->updateData( $id, $request->all() );
+        $response = $client->updateData( $id, $request->all() );
 
-        return response()->json( ['success' => 'Клиент успешно обновлён'] );
+        if($response){
+            $answer = ['success' => 'Клиент успешно обновлён'];
+        }else{
+            $answer = ['error' => 'Клиент не найден'];
+        }
+
+        return response()->json( $answer );
     }
 
     /**
@@ -85,8 +91,14 @@ class ClientController extends Controller
     public function destroy($id)
     {
         $сlient = new Client;
-        $сlient->deleteData($id);
+        $response = $сlient->deleteData($id);
 
-        return response()->json( ['success' => 'Клиент успешно удалён'] );
+        if($response){
+            $answer = ['success' => 'Клиент успешно удалён'];
+        }else{
+            $answer = ['error' => 'Клиент не найден'];
+        }
+
+        return response()->json( $answer );
     }
 }

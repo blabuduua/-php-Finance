@@ -22,14 +22,13 @@ class OrderController extends Controller
      * C - Создать Заказ
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Order $order)
+    public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
             'sum' => 'required|integer',
-            'employee_id' => 'required|integer',
+            'client_id' => 'required|integer',
             'purchase_at' => 'required|date',
         ]);
 
@@ -37,6 +36,7 @@ class OrderController extends Controller
             return response()->json( ['errors' => $validator->errors()->all()] );
         }
 
+        $order = new Order;
         $order->storeData( $request->all() );
 
         return response()->json( ['success' => 'Заказ успешно добавлен'] );
@@ -64,7 +64,7 @@ class OrderController extends Controller
     {
 		$validator = \Validator::make($request->all(), [
             'sum' => 'required|integer',
-            'employee_id' => 'required|integer',
+            'client_id' => 'required|integer',
             'purchase_at' => 'required|date',
         ]);
         
@@ -73,9 +73,15 @@ class OrderController extends Controller
         }
 
         $order = new Order;
-        $order->updateData( $id, $request->all() );
+        $response = $order->updateData( $id, $request->all() );
 
-        return response()->json( ['success' => 'Заказ успешно обновлён'] );
+        if($response){
+            $answer = ['success' => 'Заказ успешно обновлён'];
+        }else{
+            $answer = ['error' => 'Заказ не найден'];
+        }
+
+        return response()->json( $answer );
     }
 
     /**
@@ -86,9 +92,15 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-		$order = new Order;
-        $order->deleteData($id);
+        $order = new Order;
+        $response = $order->deleteData($id);
 
-        return response()->json( ['success' => 'Заказ успешно удалён'] );
+        if($response){
+            $answer = ['success' => 'Заказ успешно удалён'];
+        }else{
+            $answer = ['error' => 'Заказ не найден'];
+        }
+
+        return response()->json( $answer );
     }
 }

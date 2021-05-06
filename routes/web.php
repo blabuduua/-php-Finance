@@ -2,11 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\ClientController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ExpenseController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,11 +12,3 @@ use App\Http\Controllers\ExpenseController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::resource('employees', EmployeeController::class);
-
-Route::resource('clients', ClientController::class);
-
-Route::resource('orders', OrderController::class);
-
-Route::resource('expenses', ExpenseController::class);

@@ -73,9 +73,15 @@ class ExpenseController extends Controller
         }
 
         $expense = new Expense;
-        $expense->updateData( $id, $request->all() );
+        $response = $expense->updateData( $id, $request->all() );
 
-        return response()->json( ['success' => 'Расход успешно обновлён'] );
+        if($response){
+            $answer = ['success' => 'Расход успешно обновлён'];
+        }else{
+            $answer = ['error' => 'Расход не найден'];
+        }
+
+        return response()->json( $answer );
     }
 
     /**
@@ -87,8 +93,14 @@ class ExpenseController extends Controller
     public function destroy($id)
     {
         $expense = new Expense;
-        $expense->deleteData($id);
+        $response = $expense->deleteData($id);
 
-        return response()->json( ['success' => 'Расход успешно удалён'] );
+        if($response){
+            $answer = ['success' => 'Расход успешно удалён'];
+        }else{
+            $answer = ['error' => 'Расход не найден'];
+        }
+
+        return response()->json( $answer );
     }
 }

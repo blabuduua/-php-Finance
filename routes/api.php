@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ExpenseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +19,7 @@ use App\Http\Controllers\EmployeeController;
 |
 */
 
+// POST
 Route::post( 'employeePayment', [EmployeeController::class, 'employeePayment'] )->name('employeePayment');
 
 Route::post( 'companyIncome', [EmployeeController::class, 'companyIncome'] )->name('companyIncome');
@@ -23,3 +27,12 @@ Route::post( 'companyIncome', [EmployeeController::class, 'companyIncome'] )->na
 Route::post( 'companyConsumption', [EmployeeController::class, 'companyConsumption'] )->name('companyConsumption');
 
 Route::post( 'companyProfit', [EmployeeController::class, 'companyProfit'] )->name('companyProfit');
+
+// RESOURCES
+Route::resource('employees', EmployeeController::class);
+
+Route::resource('clients', ClientController::class);
+
+Route::resource('orders', OrderController::class);
+
+Route::resource('expenses', ExpenseController::class);
