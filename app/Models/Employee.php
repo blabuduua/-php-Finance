@@ -12,21 +12,24 @@ class Employee extends Model
     protected $table = 'employees';
     protected $guarded = array();
 
+
     /**
-    * Get the expenses for the employee.
+    * Список расходов у сотрудника
     */
     public function expenses()
     {
         return $this->hasMany(Expense::class);
     }
 
+
     /**
-    * Get the clients for the employee.
+    * Список клиентов у сотрудника
     */
     public function clients()
     {
         return $this->hasMany(Client::class);
     }
+
 
     // Рассчёт 3% от всех заказов клиентов этого сотрудника, за выбранный месяц
     public function monthOrders($employee_id, $date, $total)
@@ -51,6 +54,7 @@ class Employee extends Model
 
         return $total;
     }
+
 
     // Узнаём, является ли этот сотрудник лучшим за выбранный месяц и назначаем бонус $200
     public function monthEmployees($employee_id, $date, $total)
@@ -93,6 +97,7 @@ class Employee extends Model
         return $total;
     }
 
+
     // Узнаём, есть ли у сторудника больше 30 постоянных клиентов, которые совершили более 2-х покупок и назначаем квартальный бонус $300
     public function regularClients($employee_id, $date, $total)
     {
@@ -115,6 +120,7 @@ class Employee extends Model
 
         return $total;
     }
+
 
     // Рассчёт доходов компании за выбранный период
     public function betweenMonthOrders($from_date, $to_date)
@@ -144,6 +150,7 @@ class Employee extends Model
         return $total;
     }
 
+
     // Рассчёт расходов компании за выбранный период
     public function betweenMonthConsumption($from_date, $to_date)
     {
@@ -170,6 +177,7 @@ class Employee extends Model
         return $total;
     }
 
+
     // Рассчёт прибыли компании за выбранный период
     public function betweenMonthProfit($from_date, $to_date)
     {
@@ -177,10 +185,12 @@ class Employee extends Model
         return $this->betweenMonthOrders($from_date, $to_date) - $this->betweenMonthConsumption($from_date, $to_date);
     }
 
+
  	public function storeData($input)
     {
     	return static::create($input);
     }
+
 
     public function updateData($id, $input)
     {
@@ -192,6 +202,7 @@ class Employee extends Model
         
         return false;
     }
+
 
     public function deleteData($id)
     {   

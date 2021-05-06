@@ -18,6 +18,7 @@ class OrderController extends Controller
         return response()->json( Order::all() );
     }
 
+
     /**
      * C - Создать Заказ
      *
@@ -42,6 +43,7 @@ class OrderController extends Controller
         return response()->json( ['success' => 'Заказ успешно добавлен'] );
     }
 
+
     /**
      * R - Показать Заказ
      *
@@ -52,6 +54,7 @@ class OrderController extends Controller
     {
         return response()->json( Order::find($id) );
     }
+
 
     /**
      * U - Обновить Заказ
@@ -75,14 +78,11 @@ class OrderController extends Controller
         $order = new Order;
         $response = $order->updateData( $id, $request->all() );
 
-        if($response){
-            $answer = ['success' => 'Заказ успешно обновлён'];
-        }else{
-            $answer = ['error' => 'Заказ не найден'];
-        }
+        $answer = $this->checkResponse($response, 'обновлён');
 
         return response()->json( $answer );
     }
+
 
     /**
      * D - Удалить Заказ
@@ -95,12 +95,25 @@ class OrderController extends Controller
         $order = new Order;
         $response = $order->deleteData($id);
 
-        if($response){
-            $answer = ['success' => 'Заказ успешно удалён'];
-        }else{
-            $answer = ['error' => 'Заказ не найден'];
-        }
+        $answer = $this->checkResponse($response, 'удалён');
 
         return response()->json( $answer );
+    }
+
+
+    /**
+     * Проверка ответа на обновление или удаление
+     *
+     * @param  $response boolean
+     * @param  $process string
+     * @return array
+     */
+    public function checkResponse($response, $process)
+    {
+        if($response){
+            return ['success' => 'Сотрудник успешно ' . $process];
+        }else{
+            return ['error' => 'Сотрудник не найден'];
+        }
     }
 }

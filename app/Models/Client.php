@@ -12,18 +12,21 @@ class Client extends Model
     protected $table = 'clients';
     protected $guarded = array();
 
+
     /**
-    * Get the orders for the client.
+    * Список заказов у клиента
     */
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
+
  	public function storeData($input)
     {
     	return static::create($input);
     }
+
 
     public function updateData($id, $input)
     {
@@ -35,6 +38,7 @@ class Client extends Model
         
         return false;
     }
+
 
     public function deleteData($id)
     {   

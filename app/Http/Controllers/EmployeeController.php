@@ -28,6 +28,11 @@ class EmployeeController extends Controller
         }
 
         $date = Carbon::createFromFormat('Y-m-d', $request->date, 'Europe/Kiev'); 
+        $toDayMonth = Carbon::now();
+
+        if($date->month > $toDayMonth->month && $date->year >= $toDayMonth->year){
+            return response()->json( ['error' => 'Заказов не найдено'] );
+        }
 
         // Фиксированная ставка $500
         $total = 500;
@@ -50,6 +55,7 @@ class EmployeeController extends Controller
             return response()->json( ['error' => 'Сотрудник не найден'] );
         }
     }
+
 
     /**
      * Рассчёт доходов компании за выбранный период. 
@@ -80,6 +86,7 @@ class EmployeeController extends Controller
         return response()->json( ['companyIncome' => $total] );
     }
 
+
     /**
      * Рассчёт расходов компании за выбранный период. 
      *
@@ -108,6 +115,7 @@ class EmployeeController extends Controller
 
         return response()->json( ['companyConsumption' => $total] );
     }
+
 
     /**
      * Рассчёт прибыли компании за выбранный период. 
@@ -138,6 +146,7 @@ class EmployeeController extends Controller
         return response()->json( ['companyProfit' => $total] );
     }
 
+
     /**
      * Список всех Сотрудников
      *
@@ -147,6 +156,7 @@ class EmployeeController extends Controller
     {
         return response()->json( Employee::all() );
     }
+
 
     /**
      * C - Создать Сотрудника
@@ -170,6 +180,7 @@ class EmployeeController extends Controller
         return response()->json( ['success' => 'Сотрудник успешно добавлен'] );
     }
 
+
     /**
      * R - Показать Сотрудника
      *
@@ -180,6 +191,7 @@ class EmployeeController extends Controller
     {
         return response()->json( Employee::find($id) );
     }
+
 
     /**
      * U - Обновить Сотрудника
@@ -201,14 +213,11 @@ class EmployeeController extends Controller
         $employee = new Employee;
         $response = $employee->updateData( $id, $request->all() );
 
-        if($response){
-            $answer = ['success' => 'Сотрудник успешно обновлён'];
-        }else{
-            $answer = ['error' => 'Сотрудник не найден'];
-        }
+        $answer = $this->checkResponse($response, 'обновлён');
 
         return response()->json( $answer );
     }
+
 
     /**
      * D - Удалить Сотрудника
@@ -221,12 +230,25 @@ class EmployeeController extends Controller
         $employee = new Employee;
         $response = $employee->deleteData($id);
 
-        if($response){
-            $answer = ['success' => 'Сотрудник успешно удалён'];
-        }else{
-            $answer = ['error' => 'Сотрудник не найден'];
-        }
+        $answer = $this->checkResponse($response, 'удалён');
 
         return response()->json( $answer );
+    }
+
+
+    /**
+     * Проверка ответа на обновление или удаление
+     *
+     * @param  $response boolean
+     * @param  $process string
+     * @return array
+     */
+    public function checkResponse($response, $process)
+    {
+        if($response){
+            return ['success' => 'Сотрудник успешно ' . $process];
+        }else{
+            return ['error' => 'Сотрудник не найден'];
+        }
     }
 }

@@ -12,10 +12,12 @@ class Expense extends Model
     protected $table = 'expenses';
     protected $guarded = array();
 
+
  	public function storeData($input)
     {
     	return static::create($input);
     }
+
 
     public function updateData($id, $input)
     {
@@ -27,6 +29,7 @@ class Expense extends Model
         
         return false;
     }
+
 
     public function deleteData($id)
     {   

@@ -18,14 +18,14 @@ class ClientController extends Controller
         return response()->json( Client::all() );
     }
 
+
     /**
      * C - Создать Клиента
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Client $client)
+    public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
             'fio' => 'required|string|max:255',
@@ -36,10 +36,12 @@ class ClientController extends Controller
             return response()->json( ['errors' => $validator->errors()->all()] );
         }
 
+        $client = new Client;
         $client->storeData( $request->all() );
 
         return response()->json( ['success' => 'Клиент успешно добавлен'] );
     }
+
 
     /**
      * R - Показать Клиента
@@ -51,6 +53,7 @@ class ClientController extends Controller
     {
         return response()->json( Client::find($id) );
     }
+
 
     /**
      * U - Обновить Клиента
@@ -73,14 +76,11 @@ class ClientController extends Controller
         $client = new Client;
         $response = $client->updateData( $id, $request->all() );
 
-        if($response){
-            $answer = ['success' => 'Клиент успешно обновлён'];
-        }else{
-            $answer = ['error' => 'Клиент не найден'];
-        }
+        $answer = $this->checkResponse($response, 'обновлён');
 
         return response()->json( $answer );
     }
+
 
     /**
      * D - Удалить Клиента
@@ -93,12 +93,25 @@ class ClientController extends Controller
         $сlient = new Client;
         $response = $сlient->deleteData($id);
 
-        if($response){
-            $answer = ['success' => 'Клиент успешно удалён'];
-        }else{
-            $answer = ['error' => 'Клиент не найден'];
-        }
+        $answer = $this->checkResponse($response, 'удалён');
 
         return response()->json( $answer );
+    }
+
+
+    /**
+     * Проверка ответа на обновление или удаление
+     *
+     * @param  $response boolean
+     * @param  $process string
+     * @return array
+     */
+    public function checkResponse($response, $process)
+    {
+        if($response){
+            return ['success' => 'Сотрудник успешно ' . $process];
+        }else{
+            return ['error' => 'Сотрудник не найден'];
+        }
     }
 }

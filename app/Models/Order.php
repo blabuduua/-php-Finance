@@ -12,10 +12,12 @@ class Order extends Model
     protected $table = 'orders';
     protected $guarded = array();
 
+
  	public function storeData($input)
     {
     	return static::create($input);
     }
+
 
     public function updateData($id, $input)
     {
@@ -27,6 +29,7 @@ class Order extends Model
         
         return false;
     }
+
 
     public function deleteData($id)
     {   
