@@ -77,11 +77,14 @@ class EmployeeController extends Controller
     /**
      * D - Удалить Сотрудника
      *
-     * @param  int  $id
+     * @param  \App\Models\Employee int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $employee = new Employee;
+        $employee->deleteData($id);
+
+        return response()->json( ['success'=>'Сотрудник успешно удалён'] );
     }
 }

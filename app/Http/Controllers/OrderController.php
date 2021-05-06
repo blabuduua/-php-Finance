@@ -81,11 +81,14 @@ class OrderController extends Controller
     /**
      * D - Удалить Заказ
      *
-     * @param  int  $id
+     * @param  \App\Models\Order int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+		$order = new Order;
+        $order->deleteData($id);
+
+        return response()->json( ['success'=>'Заказ успешно удалён'] );
     }
 }

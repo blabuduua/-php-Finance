@@ -81,11 +81,14 @@ class ExpenseController extends Controller
     /**
      * D - Удалить Расход
      *
-     * @param  int  $id
+     * @param  \App\Models\Expense int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $expense = new Expense;
+        $expense->deleteData($id);
+
+        return response()->json( ['success'=>'Расход успешно удалён'] );
     }
 }

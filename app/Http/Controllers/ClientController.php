@@ -79,11 +79,14 @@ class ClientController extends Controller
     /**
      * D - Удалить Клиента
      *
-     * @param  int  $id
+     * @param  \App\Models\Client int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $сlient = new Client;
+        $сlient->deleteData($id);
+
+        return response()->json( ['success'=>'Клиент успешно удалён'] );
     }
 }
