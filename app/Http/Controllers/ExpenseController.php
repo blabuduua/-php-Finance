@@ -57,12 +57,25 @@ class ExpenseController extends Controller
      * U - Обновить Расход
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Expense int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = \Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'sum' => 'required|integer',
+            'employee_id' => 'required|integer',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json( ['errors' => $validator->errors()->all()] );
+        }
+
+        $expense = new Expense;
+        $expense->updateData( $id, $request->all() );
+
+        return response()->json( ['success'=>'Расход успешно обновлён'] );
     }
 
     /**

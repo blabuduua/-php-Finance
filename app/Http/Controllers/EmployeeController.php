@@ -55,12 +55,23 @@ class EmployeeController extends Controller
      * U - Обновить Сотрудника
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Employee int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = \Validator::make($request->all(), [
+            'fio' => 'required|string|max:255',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json( ['errors' => $validator->errors()->all()] );
+        }
+
+        $employee = new Employee;
+        $employee->updateData( $id, $request->all() );
+
+        return response()->json( ['success'=>'Сотрудник успешно обновлён'] );
     }
 
     /**

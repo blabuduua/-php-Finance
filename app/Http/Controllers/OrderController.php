@@ -57,12 +57,25 @@ class OrderController extends Controller
      * U - Обновить Заказ
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Order int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
+		$validator = \Validator::make($request->all(), [
+            'sum' => 'required|integer',
+            'employee_id' => 'required|integer',
+            'purchase_at' => 'required|date',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json( ['errors' => $validator->errors()->all()] );
+        }
+
+        $order = new Order;
+        $order->updateData( $id, $request->all() );
+
+        return response()->json( ['success'=>'Заказ успешно обновлён'] );
     }
 
     /**
