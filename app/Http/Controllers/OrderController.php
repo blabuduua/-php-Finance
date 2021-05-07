@@ -111,9 +111,9 @@ class OrderController extends Controller
     public function checkResponse($response, $process)
     {
         if($response){
-            return ['success' => 'Сотрудник успешно ' . $process];
+            return ['success' => 'Заказ успешно ' . $process];
         }else{
-            return ['error' => 'Сотрудник не найден'];
+            return ['error' => 'Заказ не найден'];
         }
     }
 }

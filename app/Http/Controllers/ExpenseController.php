@@ -111,9 +111,9 @@ class ExpenseController extends Controller
     public function checkResponse($response, $process)
     {
         if($response){
-            return ['success' => 'Сотрудник успешно ' . $process];
+            return ['success' => 'Расход успешно ' . $process];
         }else{
-            return ['error' => 'Сотрудник не найден'];
+            return ['error' => 'Расход не найден'];
         }
     }
 }

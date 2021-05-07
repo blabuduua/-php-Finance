@@ -68,7 +68,7 @@ class ClientController extends Controller
             'fio' => 'required|string|max:255',
             'employee_id' => 'required|integer',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json( ['errors' => $validator->errors()->all()] );
         }
@@ -109,9 +109,9 @@ class ClientController extends Controller
     public function checkResponse($response, $process)
     {
         if($response){
-            return ['success' => 'Сотрудник успешно ' . $process];
+            return ['success' => 'Клиент успешно ' . $process];
         }else{
-            return ['error' => 'Сотрудник не найден'];
+            return ['error' => 'Клиент не найден'];
         }
     }
 }
